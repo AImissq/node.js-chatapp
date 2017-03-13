@@ -1,12 +1,12 @@
 {
-  "name": "socket-chat-example",
+  "name": "Seng513Assignment3Truong",
   "version": "0.0.1",
-  "description": "my first socket.io app",
+  "description": "Assignment 3",
   "dependencies": {
-    "express": "^4.15.2",
+    "express": "^4.10.2",
     "socket.io": "^1.7.3"
   },
-  "scripts": {
-    "start": "node index.js"
-  }
+    "scripts":{
+        "start": "node index.js"
+    }
 }
