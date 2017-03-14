@@ -10,7 +10,7 @@ app.use(express.static(__dirname + '/public'));
 //nicknames
 var userNumber = 1;
 var nicknames = [];
-var nicknameColor = 000000;
+//var nicknameColor = 000000;
 
 //message history
 var listOfMessages = [];
@@ -36,10 +36,10 @@ io.on('connection', function(socket)
 		io.emit('updateusers', nicknames);
 		
 		//update chat log if any messages
-		io.emit('addchatlog', listOfMessages);
+		socket.emit('addchatlog', listOfMessages);
 		
-		//socket.broadcast.emit('message', 'SERVER', username + ' has connected');
-
+		io.emit('message', {type: 'notice' , message: "Notice: " + socket.nickname + " has connected to server"});
+		
 		
 		callback(socket.nickname);
 		
@@ -55,10 +55,10 @@ io.on('connection', function(socket)
 		//data = time  + " " + socket.nickname + ": " + data;
 		
 		//add message to log list
-		listOfMessages.push(time  + " " + socket.nickname + ": " + data);
+		listOfMessages.push(time  + " " + socket.nickname + ": " + data.message);
 		
 		//send regular message
-		io.emit('message', {type: 'chat', nickname: socket.nickname, message:data, timestamp: time, nickColor: nicknameColor}) ;
+		io.emit('message', {type: 'chat', nickname: socket.nickname, message:data.message, timestamp: time, nickColor: data.nickColor}) ;
 		
 	});
 	
@@ -91,12 +91,8 @@ io.on('connection', function(socket)
 	//change nickname color 
 	socket.on('changenicknameColor', function(data)
 	{
-		//set nickname color
-		nicknameColor = data;
 		//notice message
-		io.emit('message', {type: 'notice' , message:"Notice: " + socket.nickname + " changed nickname color to " + data}) ;
-		
-		
+		io.emit('message', {type: 'notice' , message:"Notice: " + socket.nickname + " changed nickname color to " + data}) ;		
 	});
 	
 	//if user disconnects
@@ -106,6 +102,7 @@ io.on('connection', function(socket)
 			return;	
 		nicknames.splice(nicknames.indexOf(socket.nickname), 1);
 		io.emit('updateusers', nicknames);
+		io.emit('message', {type: 'notice' , message: "Notice: " + socket.nickname + " has disconnected from server"});
 		
 	});
 });

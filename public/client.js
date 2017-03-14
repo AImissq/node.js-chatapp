@@ -6,6 +6,7 @@ jQuery(function($){
 	var $users = $('#usernames');
 	var $currentUserName = $('#usernameIndicator');
 	var myUsername;
+	var myNickColor = 000000;
 	
 	//add new user
 	socket.on('connect',function(){
@@ -27,7 +28,7 @@ jQuery(function($){
 	//list of online users
 	socket.on('updateusers', function(nicknames){
 		var html = '';
-		for (i = 0; i <nicknames.length; i ++)
+		for (var i = 0; i <nicknames.length; i ++)
 		{
 			html += nicknames[i] + '<br>';
 		}			
@@ -60,11 +61,12 @@ jQuery(function($){
 		else if(messageAsArray[0]=== "/nickcolor" && messageAsArray.length>1)
 		{
 			socket.emit('changenicknameColor', messageAsArray[1]);
+			myNickColor = messageAsArray[1];
 		}
 		
 		//if regular message
 		else{
-			socket.emit('message', $messageBox.val());
+			socket.emit('message',{type: 'chat', message:$messageBox.val(), nickColor: myNickColor} );
 		}
 		$messageBox.val('');
 		
@@ -76,7 +78,7 @@ jQuery(function($){
 		if (data.type === 'chat'){
 			//if current user sent it
 			if(data.nickname === myUsername){
-				$chat.append($('<li>').html((data.timestamp  + " " + data.nickname.fontcolor(data.nickColor) + ": " + data.message).bold())); 
+				$chat.append($('<li>').html((data.timestamp  + " " + data.nickname.fontcolor(myNickColor) + ": " + data.message).bold())); 
 			}
 			else{
 				$chat.append($('<li>').html(data.timestamp  + " " + data.nickname.fontcolor(data.nickColor) + ": " + data.message)); 
