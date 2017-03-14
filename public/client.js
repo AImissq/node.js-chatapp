@@ -36,7 +36,9 @@ jQuery(function($){
 	var myUsername;
 	//add new user
 	socket.on('connect',function(){
-		socket.emit('adduser');
+		socket.emit('adduser',function(data){
+			myUsername = data;
+		});
 	});
 	
 	socket.on('addchatlog', function(listOfMessages){
@@ -74,8 +76,8 @@ jQuery(function($){
 	socket.on('message', function(data){
 		if (data.type === 'chat'){
 			//if current user sent it
-			if(data.nickname === "user3"){
-				$chat.append($('<li>').text(socket.nickname));
+			if(data.nickname === myUsername){
+				$chat.append($('<li>').html((data.timestamp  + " " + data.nickname + ": " + data.message).bold())); 
 			}
 			else{
 				$chat.append($('<li>').text(data.timestamp  + " " + data.nickname + ": " + data.message)); 

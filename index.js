@@ -27,7 +27,7 @@ io.on('connection', function(socket)
   
 	//add user
 	//first thing done
-	socket.on('adduser', function(){
+	socket.on('adduser', function(callback){
 		//create store username
 		myName = userNumber ++;
 		var nickname = "user" + myName;
@@ -39,6 +39,8 @@ io.on('connection', function(socket)
 		
 		//update chat log if any messages
 		socket.emit('addchatlog', listOfMessages);
+		
+		callback(socket.nickname);
 		
 	});
 	
