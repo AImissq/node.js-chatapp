@@ -12,8 +12,6 @@ var userNumber = 1;
 var nicknames = [];
 var nicknameColor = 000000;
 
-//list of users
-var listOfUsers = [];
 //message history
 var listOfMessages = [];
 
@@ -21,14 +19,13 @@ io.on('connection', function(socket)
 {
 	//log messages
 	console.log('a user connected');
-	socket.on('disconnect', function(){
-		console.log('user disconnected');
-	});
+	
   
   
 	//add user
 	//first thing done
-	socket.on('adduser', function(callback){
+	socket.on('adduser', function(callback)
+	{
 		//create store username
 		myName = userNumber ++;
 		var nickname = "user" + myName;
@@ -36,10 +33,13 @@ io.on('connection', function(socket)
 		nicknames.push(nickname);
 		
 		//add to user list and tell clients to update their html
-		//io.socket.emit('updateuserlist', nicknames);
+		io.emit('updateusers', nicknames);
 		
 		//update chat log if any messages
-		socket.emit('addchatlog', listOfMessages);
+		io.emit('addchatlog', listOfMessages);
+		
+		//socket.broadcast.emit('message', 'SERVER', username + ' has connected');
+
 		
 		callback(socket.nickname);
 		
@@ -79,14 +79,17 @@ io.on('connection', function(socket)
 			nicknames[ nicknames.indexOf(socket.nickname)] = data;//update list with new nickname
 			socket.nickname=data;
 			
+			//add to user list and tell clients to update their html
+			io.emit('updateusers', nicknames);
+			
 			//notice message
 			io.emit('message', {type: 'notice' , message:"Notice: " + oldnickname + " changed nickname to " + socket.nickname}) ;
 		}
 		
 	});
 	
-	//check if user entered change nick command, if so change nick, otherwise send message
-	socket.on('changenicknameColor',function(data)
+	//change nickname color 
+	socket.on('changenicknameColor', function(data)
 	{
 		//set nickname color
 		nicknameColor = data;
@@ -95,8 +98,19 @@ io.on('connection', function(socket)
 		
 		
 	});
+	
+	//if user disconnects
+	socket.on('disconnect', function(){
+		console.log('user disconnected');
+		if(!socket.nickname) 
+			return;	
+		nicknames.splice(nicknames.indexOf(socket.nickname), 1);
+		io.emit('updateusers', nicknames);
+		
+	});
 });
 
+//gets current time and returns in (hh:mm am/pm) format
 function getCurrentTime(){
 	//get timestamp and format it
 		var date = new Date();
@@ -107,6 +121,7 @@ function getCurrentTime(){
 		minutes = (minutes <10) ? "0" + minutes:minutes;
 		return "(" + hours + ":" + minutes + ampm + ")";
 }
+
 http.listen(port,function()
 {
 	console.log('listening on port', port);

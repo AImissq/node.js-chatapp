@@ -1,46 +1,22 @@
-/*$(function () {
-	var socket = io.connect('http://localhost:3000');
-	
-	
-	socket.on('connect',function(){
-		socket.emit('adduser');
-	});
-	
-	socket.on('addchatlog', function(listOfMessages){
-		for (var i = 0; i <listOfMessages.length; i ++)
-		{
-			$('#messages').append($('<li>').text(listOfMessages[i])) ;
-		}
-	});
-	
-	$('form').submit(function(){
-	
-		socket.emit('message', $('#m').val());
-		$('#m').val('');
-		return false;
-		
-	});
-	
-	socket.on('message', function(data){
-		$('#messages').append($('<li>').text(data)) ;
-	});
-	
-	
-});*/
-
 jQuery(function($){
 	var socket=io.connect();
 	var $messageForm = $('form');
 	var $messageBox = $('#m');
 	var $chat = $('#messages');
+	var $users = $('#usernames');
+	var $currentUserName = $('#usernameIndicator');
 	var myUsername;
+	
 	//add new user
 	socket.on('connect',function(){
 		socket.emit('adduser',function(data){
 			myUsername = data;
+			$currentUserName.html("You are: " + myUsername);
 		});
+		
 	});
 	
+	//chat history
 	socket.on('addchatlog', function(listOfMessages){
 		for (var i = 0; i <listOfMessages.length; i ++)
 		{
@@ -48,13 +24,24 @@ jQuery(function($){
 		}
 	});
 	
+	//list of online users
+	socket.on('updateusers', function(nicknames){
+		var html = '';
+		for (i = 0; i <nicknames.length; i ++)
+		{
+			html += nicknames[i] + '<br>';
+		}			
+		$users.html(html);
+	});
+	
+	//user sends message
 	$messageForm.submit(function(e){
 		e.preventDefault();
 		
 		var messageAsArray = $messageBox.val().split(" ");
 		
 		//if message is nickchange
-		if(messageAsArray[0]=== "/nick")
+		if(messageAsArray[0]=== "/nick" && messageAsArray.length>1)
 		{
 			socket.emit('changenickname', messageAsArray[1], function(data){
 				if(!data){
@@ -64,12 +51,13 @@ jQuery(function($){
 				//set private username to new username
 				else{
 					myUsername = data;
+					$currentUserName.html("You are: " + myUsername);
 				}
 			});
 		}
 		
 		//if change nickname color
-		else if(messageAsArray[0]=== "/nickcolor")
+		else if(messageAsArray[0]=== "/nickcolor" && messageAsArray.length>1)
 		{
 			socket.emit('changenicknameColor', messageAsArray[1]);
 		}
@@ -88,16 +76,18 @@ jQuery(function($){
 		if (data.type === 'chat'){
 			//if current user sent it
 			if(data.nickname === myUsername){
-				$chat.append($('<li>').html((data.timestamp  + " " + '<span style ="color:#' + data.nickColor + '">' + data.nickname + "</span>" + ": " + data.message).bold())); 
+				$chat.append($('<li>').html((data.timestamp  + " " + data.nickname.fontcolor(data.nickColor) + ": " + data.message).bold())); 
 			}
 			else{
-				$chat.append($('<li>').html(data.timestamp  + " " + '<span style ="color:#' + data.nickColor + '">' + data.nickname + "</span>" + ": " + data.message)); 
+				$chat.append($('<li>').html(data.timestamp  + " " + data.nickname.fontcolor(data.nickColor) + ": " + data.message)); 
 			}
 		}
 		
 		else if (data.type ==='notice'){
-			$chat.append($('<li>').html('<span style ="color:#ff0000">' + data.message + "</span>")) ;
+			$chat.append($('<li>').html(data.message.fontcolor("ff0000"))) ;
 		}
 		
 	});
+	
+	
 });
