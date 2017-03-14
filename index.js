@@ -10,6 +10,7 @@ app.use(express.static(__dirname + '/public'));
 //nicknames
 var userNumber = 1;
 var nicknames = [];
+var nicknameColor = 000000;
 
 //list of users
 var listOfUsers = [];
@@ -57,7 +58,7 @@ io.on('connection', function(socket)
 		listOfMessages.push(time  + " " + socket.nickname + ": " + data);
 		
 		//send regular message
-		io.emit('message', {type: 'chat', nickname: socket.nickname, message:data, timestamp: time}) ;
+		io.emit('message', {type: 'chat', nickname: socket.nickname, message:data, timestamp: time, nickColor: nicknameColor}) ;
 		
 	});
 	
@@ -72,15 +73,26 @@ io.on('connection', function(socket)
 		
 		//else change nickname
 		else
-		{
-			callback(true);
+		{	
+			callback(data);
 			var oldnickname =socket.nickname;
 			nicknames[ nicknames.indexOf(socket.nickname)] = data;//update list with new nickname
 			socket.nickname=data;
 			
 			//notice message
-			io.emit('message', {type: 'notice' , message:oldnickname + " changed nickname to " + socket.nickname}) ;
+			io.emit('message', {type: 'notice' , message:"Notice: " + oldnickname + " changed nickname to " + socket.nickname}) ;
 		}
+		
+	});
+	
+	//check if user entered change nick command, if so change nick, otherwise send message
+	socket.on('changenicknameColor',function(data)
+	{
+		//set nickname color
+		nicknameColor = data;
+		//notice message
+		io.emit('message', {type: 'notice' , message:"Notice: " + socket.nickname + " changed nickname color to " + data}) ;
+		
 		
 	});
 });

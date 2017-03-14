@@ -60,7 +60,18 @@ jQuery(function($){
 				if(!data){
 					$chat.append($('<li>').text("Error: Username already taken.")) ;
 				}
+				
+				//set private username to new username
+				else{
+					myUsername = data;
+				}
 			});
+		}
+		
+		//if change nickname color
+		else if(messageAsArray[0]=== "/nickcolor")
+		{
+			socket.emit('changenicknameColor', messageAsArray[1]);
 		}
 		
 		//if regular message
@@ -77,10 +88,10 @@ jQuery(function($){
 		if (data.type === 'chat'){
 			//if current user sent it
 			if(data.nickname === myUsername){
-				$chat.append($('<li>').html((data.timestamp  + " " + data.nickname + ": " + data.message).bold())); 
+				$chat.append($('<li>').html((data.timestamp  + " " + '<span style ="color:#' + data.nickColor + '">' + data.nickname + "</span>" + ": " + data.message).bold())); 
 			}
 			else{
-				$chat.append($('<li>').text(data.timestamp  + " " + data.nickname + ": " + data.message)); 
+				$chat.append($('<li>').html(data.timestamp  + " " + '<span style ="color:#' + data.nickColor + '">' + data.nickname + "</span>" + ": " + data.message)); 
 			}
 		}
 		
