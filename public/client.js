@@ -96,7 +96,7 @@ jQuery(function($){
 		}
 		
 		else if (data.type ==='notice'){
-			$chat.append($('<li>').text(data.message)) ;
+			$chat.append($('<li>').html('<span style ="color:#ff0000">' + data.message + "</span>")) ;
 		}
 		
 	});
