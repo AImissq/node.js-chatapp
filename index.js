@@ -38,7 +38,8 @@ io.on('connection', function(socket)
 		//update chat log if any messages
 		socket.emit('addchatlog', listOfMessages);
 		
-		io.emit('message', {type: 'notice' , message: "Notice: " + socket.nickname + " has connected to server"});
+		socket.broadcast.emit('message', {type: 'notice' , message: "Notice: " + socket.nickname + " has connected to server"});
+		socket.emit('message', {type:'notice', message: "You have connected."})
 		
 		
 		callback(socket.nickname);
@@ -48,7 +49,7 @@ io.on('connection', function(socket)
 	//broadcast messages
 	socket.on('message', function(data)
 	{
-		console.log('message: ' + data);
+		console.log('message: ' + data.message);
 		
 		var time = getCurrentTime();
 		

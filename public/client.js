@@ -12,7 +12,7 @@ jQuery(function($){
 	socket.on('connect',function(){
 		socket.emit('adduser',function(data){
 			myUsername = data;
-			$currentUserName.html("You are: " + myUsername);
+			$currentUserName.html('<h2>' + myUsername + '</h2>');
 		});
 		
 	});
@@ -52,7 +52,7 @@ jQuery(function($){
 				//set private username to new username
 				else{
 					myUsername = data;
-					$currentUserName.html("You are: " + myUsername);
+					$currentUserName.html('<h2>' + myUsername + '</h2>');
 				}
 			});
 		}
@@ -93,3 +93,4 @@ jQuery(function($){
 	
 	
 });
+	

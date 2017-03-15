@@ -1,4 +1,4 @@
-*{
+/**{
 	
 }
 
@@ -38,4 +38,80 @@ form button {
 
 #usersContainer{
 	
+}*/
+
+
+body, div, h1, h2, h3, h4, h5, h6, p, ul, img {
+	margin:0px; padding:0px;.
 }
+
+#wrapper{
+	background-color:#3a6db7;
+	
+	padding: 10px 30px 0px 30px;
+	margin:auto;
+	height:100%;
+}
+#title {
+	/*background-color:#4286f4;*/
+	text-align:center;
+}
+
+#usernameIndicator h2
+{
+	color:blue;
+}
+
+#main
+{
+	
+	height:300px;
+	
+}
+
+#messageArea{
+	width:70%;
+	height:100%;
+	/*background-color:#e2d48a;*/
+	background-color:#ffffff;
+	float:left;
+	overflow:auto;
+	padding-right:20px;
+	display:block;
+}
+
+#messages{
+
+	vertical-align:bottom;
+}
+
+#currentOnline{
+	float:right;
+	text-align:center;
+}
+#usernames{
+	/*width:25%;*/
+	height:100%;
+	background-color:#e5e5e5;
+	margin-left:50px;
+}
+
+#messagebarArea{
+	width:100%;
+}
+#form{
+	width:100%;
+	
+}
+
+form input { 
+	 width:90%;
+	 margin-top:20px;
+	 margin-bottom:20px;
+}
+
+form button {
+	width:9%;
+	
+}	
+	
