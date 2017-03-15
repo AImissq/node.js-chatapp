@@ -22,7 +22,7 @@ jQuery(function($){
 				$currentUserName.html('<h2>' + myUsername + '</h2>');
 				
 				//set the cookie
-				setCookie("username", myUsername, 100)
+				setCookie("username", myUsername, 100);
 			});
 		}
 		//cookie already exists, reconnect
