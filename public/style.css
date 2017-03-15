@@ -1,99 +1,74 @@
-/**{
-	
-}
-
-body { 
-
-}
-
-form { 
-	
-}
-
-form input { 
-
-}
-
-form button {
-
-#messages 
-{
-	
-	
-}
-
-#messages li {
-
-}
-
-#messages li:nth-child(odd) { 
-	
-}
-
-#messagesArea
-{
-	
-	
-}
-
-#usersContainer{
-	
-}*/
-
-
 body, div, h1, h2, h3, h4, h5, h6, p, ul, img {
 	margin:0px; padding:0px;.
 }
 
+body{
+	font-family:helvetica;
+}
 #wrapper{
 	background-color:#3a6db7;
-	
 	padding: 10px 30px 0px 30px;
 	margin:auto;
 	height:100%;
 }
 #title {
-	/*background-color:#4286f4;*/
 	text-align:center;
+	color:#e8bf2e;
+	font-family:arial;
+	font-size:20px;
 }
 
 #usernameIndicator h2
 {
-	color:blue;
+	color:#e8842e;
+	float:left;
+	width:90%;
+	text-decoration: underline;
+}
+
+#currentOnline{
 }
 
 #main
 {
-	
-	height:300px;
+	height:500px;
 	
 }
 
 #messageArea{
-	width:70%;
+	width:90%;
 	height:100%;
-	/*background-color:#e2d48a;*/
 	background-color:#ffffff;
 	float:left;
 	overflow:auto;
-	padding-right:20px;
-	display:block;
+	border: 1px solid;
+    position: relative;
+	border-radius:5px;
 }
 
 #messages{
-
-	vertical-align:bottom;
+	width:100%;
+    position: absolute;
+    bottom: 0px;
+	max-height:100%;
 }
 
-#currentOnline{
-	float:right;
-	text-align:center;
+#messages li {
+	padding: 5px 10px;
 }
+
+#messages li:nth-child(odd) { 
+	background: #eee;
+}
+
 #usernames{
-	/*width:25%;*/
 	height:100%;
 	background-color:#e5e5e5;
-	margin-left:50px;
+	border: 1px solid;
+	width:9%;
+	float:left;
+	overflow:auto;
+	border-radius:5px;
 }
 
 #messagebarArea{
@@ -102,16 +77,20 @@ body, div, h1, h2, h3, h4, h5, h6, p, ul, img {
 #form{
 	width:100%;
 	
+	
 }
 
 form input { 
 	 width:90%;
 	 margin-top:20px;
 	 margin-bottom:20px;
+	 border-radius:5px;
+	 
 }
 
 form button {
-	width:9%;
-	
-}	
+	width: 9%; 
+	background: rgb(130, 244, 255); 
+	border-radius:5px;
+}
 	
