@@ -46,6 +46,23 @@ io.on('connection', function(socket)
 		
 	});
 	
+	socket.on('reconnectuser', function(data)
+	{
+		socket.nickname = data.nickname;
+		
+		//add reconnect user to list
+		nicknames.push(data.nickname);
+		
+		//add to user list and tell clients to update their html
+		io.emit('updateusers', nicknames);
+		
+		//update chat log if any messages
+		socket.emit('addchatlog', listOfMessages);
+		
+		socket.broadcast.emit('message', {type: 'notice' , message: "Notice: " + socket.nickname + " has reconnected to server"});
+		socket.emit('message', {type:'notice', message: "You have reconnected."})
+	});
+	
 	//broadcast messages
 	socket.on('message', function(data)
 	{

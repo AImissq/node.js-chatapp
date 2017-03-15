@@ -11,17 +11,40 @@ jQuery(function($){
 	
 	//add new user
 	socket.on('connect',function(){
-		socket.emit('adduser',function(data){
-			myUsername = data;
+		//no cookie, so first time
+		var cookieValue = getCookie("username");
+		
+		if(cookieValue === "")
+		{
+			socket.emit('adduser',function(data)
+			{
+				myUsername = data;
+				$currentUserName.html('<h2>' + myUsername + '</h2>');
+				
+				//set the cookie
+				setCookie("username", myUsername, 100)
+			});
+		}
+		//cookie already exists, reconnect
+		else
+		{
+			myUsername=cookieValue;
 			$currentUserName.html('<h2>' + myUsername + '</h2>');
-		});
+			socket.emit('reconnectuser',{nickname:myUsername});
+			
+			var cookieValue = getCookie("nicknamecolor")
+			//if user set nicknamecolor
+			if (cookieValue !== "")
+				myNickColor = cookieValue;
+		}
+		
 		
 	});
 	
 	//chat history
 	socket.on('addchatlog', function(listOfMessages){
 		for (var i = 0; i <listOfMessages.length; i ++)
-		{
+		{	
 			$chat.append($('<li>').text(listOfMessages[i])) ;
 			updateScroll();
 		}
@@ -59,6 +82,9 @@ jQuery(function($){
 					else{
 						myUsername = data;
 						$currentUserName.html('<h2>' + myUsername + '</h2>');
+						
+						//set the cookie, overwrites previous.
+						setCookie("username", myUsername, 100)
 					}
 				});
 			}
@@ -68,6 +94,8 @@ jQuery(function($){
 			{
 				socket.emit('changenicknameColor', messageAsArray[1]);
 				myNickColor = messageAsArray[1];
+				
+				setCookie("nicknamecolor", messageAsArray[1], 100)
 			}
 			
 			//if regular message
@@ -131,16 +159,3 @@ function getCookie(cname) {
     }
     return "";
 }
-
-function checkCookie() {
-    var user = getCookie("username");
-    if (user != "") {
-        alert("Welcome again " + user);
-    } else {
-        user = prompt("Please enter your name:", "");
-        if (user != "" && user != null) {
-            setCookie("username", user, 365);
-        }
-    }
-}
-	
