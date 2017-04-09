@@ -63,10 +63,8 @@ jQuery(function($){
 	//user sends message
 	$messageForm.submit(function(e){
 		e.preventDefault();
-		  var url = "https://veeda-8bc58.firebaseio.com";
-
-var firebaseRef = new Firebase(url);
-firebaseRef.set({Year:"22"});
+		 
+		
 		var messageAsArray = $messageBox.val().split(" ");
 		
 		//if there is text
